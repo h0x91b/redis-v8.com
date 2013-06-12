@@ -1,0 +1,44 @@
+{% extends 'layout.html' %}
+{% block contentclass %} center{% endblock %}
+
+{% block content %}
+<img src="img/redis-v8-large-logo.png" alt="Redis-v8 logo" class="main_logo">
+<div class="page-header">
+	<h1 class="main-title">Redis - V8</h1>
+</div>
+<p class="description">
+	Redis-v8 - Not Only SQL (NoSQL) database with built in Google V8 JS engine. The purpose of the project - the ease of use, high speed, bandwidth savings, ease of migrating.
+</p>
+<div class="quick-buttons">
+	<a id="docs-button" href="/docs/">Docs</a>
+	<a id="downloads-button" href="/downloads/">Downloads</a>
+	<div class="clear"></div>
+	<small>Latest version: v0.3.0 alpha</small>
+</div>
+<div class="info">
+	Interested in release candidates or unstable versions? <a href="/downloads/">Check the downloads page.</a>
+</div>
+<div class="row left components">
+	<div class="span6">
+		<a href="http://www.redis.io/" class="pull-left">
+			<img src="img/redis-logo.png">
+		</a>
+		<p>
+			Redis is an open source, BSD licensed, advanced key-value store. It is often referred to as a data structure server since keys can contain strings, hashes, lists, sets and sorted sets.
+		</p>
+		<a href="http://www.redis.io/" class="read-more" target="_blank">read more</a>
+	</div>
+	<div class="span6">
+		<a href="https://code.google.com/p/v8/" class="pull-left">
+			<img src="img/v8-logo.png">
+		</a>
+		<p>
+			V8 is Google's open source JavaScript engine.
+			V8 is written in C++ and is used in Chromium, the open source browser from Google.
+			V8 can run standalone, or can be embedded into any C++ application.
+		</p>
+		<a href="https://code.google.com/p/v8/" class="read-more" target="_blank">read more</a>
+	</div>
+	
+</div>
+{% endblock %}

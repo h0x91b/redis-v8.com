@@ -1,0 +1,248 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="row floatleftisright">
+	<div class="span3">
+		<div class="side_menu right_menu">
+			<h3>Docs</h3>
+			<nav id="content_menu">
+				<ul class="nav">
+					<li class="active"><a href="#v8commands">Redis-v8 command list</a></li>
+					<li><a href="#jsapi">JS API</a></li>
+					<li><a href="#jsapispecial">JS API special functions</a></li>
+					<li><a href="#redisconf">Redis.conf</a></li>
+					<li><a href="#protocol">Protocol</a></li>
+					<li><a href="#compiling">Compiling redis-v8</a></li>
+					<li><a href="#tutorials">Tutorials</a></li>
+				</ul>
+			</nav>
+		</div>
+	</div>
+	<div class="span9">
+		<div class="page-header">
+			<h1>Docs <small>Manual & Documentation</small></h1>
+		</div>
+		<section id="content">
+			<div class="post">
+				<h2 id="v8commands">Redis-v8 command list</h2>
+				<dl>
+					<dt>JS</dt>
+					<dd>
+						JS - command used for execution a js code in database. Return of this function will be JSON encoded. You will need properly escape strings for right js syntax, otherwise  will be return error.
+						<pre class="prettyprint linenums languague-js">
+$ ./redis-cli JS 'return 2+2*2';
+</pre>
+return will be:
+						<pre class="prettyprint linenums languague-js">
+"{\"ret\":6,\"cmds\":0}"
+</pre>
+					</dd>
+					<dt>JSCALL <js_function_name></dt>
+					<dd>
+						JSCALL - command used for safe and fast execution a js functions in database. Return of this function will be JSON encoded. All arguments will be passed to a js_function_name as a string arguments.
+						<pre class="prettyprint linenums languague-js">
+$ ./redis-cli JSCALL "redis.set" "hello" "world"
+$ ./redis-cli JSCALL "redis.get" "hello"
+$ ./redis-cli JSCALL "console.log" "hello" "world"
+</pre>
+					</dd>
+					<dt>JSRELOAD</dt>
+					<dd>
+						JSRELOAD - command used for reinitialize V8 with all user scripts.
+						<pre class="prettyprint linenums languague-js">
+$ ./redis-cli JSRELOAD
+</pre>
+					</dd>
+				</dl>
+				
+				
+				<h2 id="jsapi">JS API</h2>
+				<dl>
+					<dt>redis.*</dt>
+					<dd>
+						<p>
+							redis Object have all standart redis commands, like redis.get, redis.set, redis.hmset etc...<br>A full list of redis commands you cand find on <a href="http://redis.io/commands" target="_blank">redis.io/commands</a>.
+						</p>
+						<pre class="prettyprint linenums languague-js">
+$ ./redis-cli JS "redis.set('hello', 'world'); return redis.get('hello');"
+$ ./redis-cli JSCALL redis.get 'hello'
+</pre>
+					</dd>
+					<dt>redis.hmset(key,object)</dt>
+					<dd>
+						redis.hmset
+						<pre class="prettyprint linenums languague-js">
+$ ./redis-cli JS 'redis.hmset("HSET:KEYNAME",{"id":123,"title":"some title","body":"some body"})';
+</pre>
+					</dd>
+					<dt>redis.hgetall(key)</dt>
+					<dd>
+						redis.hgetall - will return a JS Object, or null
+						<pre class="prettyprint linenums languague-js">
+$ ./redis-cli JS 'return redis.hgetall("HSET:KEYNAME")';
+</pre>
+					</dd>
+					<dt>redis.hmget(key,field1[,field2[,field3...]]) or redis.hmget(key,['field1','field2','field3'])</dt>
+					<dd>
+						redis.hmget - will return a JS Object, or null
+						<pre class="prettyprint linenums languague-js">
+$ ./redis-cli JS 'return redis.hmget("HSET:KEYNAME","id","title","body")';
+$ ./redis-cli JS 'return redis.hmget("HSET:KEYNAME",["id","title","body"])';
+</pre>
+					</dd>
+					<dt>window</dt>
+					<dd>
+						window - reference for a global object, like in browsers.
+					</dd>
+					
+					<dt>console.log([arguments])</dt>
+					<dd>
+						console.log - will print pretified JSON of arguments to redis.log, with loglevel REDIS_NOTICE.
+					</dd>
+					<dt>console.debug([arguments])</dt>
+					<dd>
+						console.debug - will print pretified JSON of arguments to redis.log, with loglevel REDIS_DEBUG.
+					</dd>
+					<dt>console.info([arguments])</dt>
+					<dd>
+						console.info - will print pretified JSON of arguments to redis.log, with loglevel REDIS_VERBOSE.
+					</dd>
+					<dt>console.warn([arguments])</dt>
+					<dd>
+						console.warn - will print pretified JSON of arguments to redis.log, with loglevel REDIS_WARNING.
+					</dd>
+				</dl>
+				
+				<h2 id="jsapispecial">JS API special functions</h2>
+				<dl>
+					<dt>jscall_wrapper_function</dt>
+					<dd>
+						jscall_wrapper_function - this is internal function used for JSCALL.
+					</dd>
+					<dt>redis._run</dt>
+					<dd>
+						Internal redis-V8 function used in almost all js wrappers. 
+						<pre class="prettyprint linenums languague-js">
+$ ./redis-cli JS 'return redis._run("SET","Hello","World")';
+$ ./redis-cli JS 'return redis._run("HMSET","HSET:KEYNAME","id",123,"title","some tile","body","some body")';
+</pre>
+					</dd>
+					<dt>redis.last_error</dt>
+					<dd>
+						redis.last_error - will be empty if redis.* command executed succesfully, or will contain error string.
+					</dd>
+					<dt>redis.v8_start</dt>
+					<dd>
+						JS timestamp of V8 init, command JSRELOAD will flush it.
+					</dd>
+					<dt>redis._runcounter</dt>
+					<dd>
+						Counter of redis api calls.
+					</dd>
+					<dt>redis.inline_return</dt>
+					<dd>
+						Internal redis-v8 function, used for JS command wrap and JSON return.
+					</dd>
+				</dl>
+				
+				
+				<h2 id="redisconf">Redis.conf</h2>
+				<dl>
+					<dt>js-dir</dt>
+					<dd>
+						js-dir - path for user scripts folder.
+						<pre class="prettyprint linenums languague-js">
+js-dir "/var/www/redis-v8/js/"
+</pre>
+					</dd>
+					<dt>js-flags</dt>
+					<dd>
+						js-flags - Google v8 flags. You can set flags with redis command CONFIG SET js-flags "" and run JSRELOAD.
+						<pre class="prettyprint linenums languague-js">
+js-flags "--trace_inlining --trace_opt --trace_deopt --trace_opt_verbose --trace_exception --trace-hydrogen"
+</pre>
+						<p>
+							Full list of js-flags you can get by folowing command:
+						</p>
+						<pre class="prettyprint linenums languague-js">
+$ cd redis-v8/
+$ ./redis/deps/v8/out/native/d8 --help
+</pre>
+						
+					</dd>
+					<dt>js-timeout</dt>
+					<dd>
+						js-timeout - The time in seconds after which an error will be thrown.
+						<pre class="prettyprint linenums languague-js">
+js-timeout 30
+</pre>
+					</dd>
+					<dt>js-slow</dt>
+					<dd>
+						js-slow - The time in miliseconds after which an notice will be logged in redis logfile.
+						<pre class="prettyprint linenums languague-js">
+js-slow 250
+</pre>
+					</dd>
+				</dl>
+				
+				
+				<h2 id="protocol">Redis-v8 protocol</h2>
+				<p>
+					Redis-v8 support regular protocol of redis, you can see a specification at <a href="http://redis.io/topics/protocol" target="_blank">redis.io/topics/protocol</a>.
+				</p>
+				<p>
+					JS, and JSCALL commands always return string with JSON, or redis error will be thrown.
+				</p>
+				<pre class="prettyprint linenums languague-js">
+{"ret":6,"cmds":0}
+
+{"ret":"hello","cmds":0}
+
+{"ret":{"object":{"data":[1,2,3,4,5]}},"cmds":0}
+</pre>
+				<p>
+				where "ret" will be function return and "cmds" - counter of DB command was executed on this function call.									
+				</p>
+				
+				
+				<h2 id="compiling">Compiling redis-v8</h2>
+				<p>
+					You will need the following packages:
+					<ol>
+						<li>clang++</li>
+						<li>git</li>
+						<li>svn</li>
+						<li>vim-common</li>
+						<li>jemalloc-devel</li>
+						<li>tclsh8.5 - for running unit tests</li>
+					</ol>
+				</p>
+				<p>Getting source and compiling:</p>
+				<pre class="prettyprint linenums languague-js">
+$ git clone git://github.com/h0x91b/redis-v8.git
+$ cd redis-v8/redis
+$ make MALLOC=jemalloc
+</pre>
+				<p>Running redis-v8 server</p>
+				<pre class="prettyprint linenums languague-js">
+# from the root of redis-v8 folder
+$ cd redis/
+$ ./redis-server ../redis.conf
+</pre>
+				<p>Running benchmarks</p>
+				<pre class="prettyprint linenums languague-js">
+# from the root of redis-v8 folder
+$ cd redis/
+$ ./redis-benchmark -q -s /tmp/redis.sock
+</pre>
+				
+				<h2 id="tutorials">Tutorials</h2>
+				<ol>
+					<li><a href="/quick-start/">Quick start</a></li>
+				</ol>
+			</div>
+		</section>
+	</div>
+</div>
+{% endblock %}
