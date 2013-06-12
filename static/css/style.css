@@ -114,6 +114,9 @@ dt {
 .pull-left img {
 	margin: 0 15px 15px 0;
 }
+.thumb img {
+	border: 4px solid #eee;
+}
 a.read-more {
 	text-align: right;
 	margin: 5px;
@@ -193,6 +196,23 @@ div.quick-buttons {
 }
 #content .quick-buttons a:active:after {
 	border-top-width: 0;
+}
+#content .link_icon, #content .link_icon:hover, #content .link_icon:visited {
+	text-decoration: none;
+}
+.link_icon img {
+	transition: transform 0.3s ease-in-out;
+		-webkit-transition: -webkit-transform 0.3s ease-in-out;
+		-moz-transition: -moz-transform 0.3s ease-in-out;
+		-o-transition: -o-transform 0.3s ease-in-out;
+		-ms-transition: ms-transform 0.3s ease-in-out;
+}
+.link_icon:hover img {
+	transform: rotate(360deg);
+		-webkit-transform: rotate(360deg);
+		-moz-transform: rotate(360deg);
+		-o-transform: rotate(360deg);
+		-ms-transform: rotate(360deg);
 }
 /*----coor_animate----*/
 .bg_color_anime, #top_menu li a:after {
@@ -338,8 +358,8 @@ div.quick-buttons {
 #content ul, #content ol {
 	/*margin-left: 40px;*/
 }
-#content li {
-	/*padding: 4px 0;*/
+#content .post li {
+	margin: 10px 0;
 }
 .main_logo {
 	margin-top: 15px;
@@ -553,5 +573,24 @@ ul.note li{
 	}
 	#footer .container {
 			background: url(../img/darck_bg.png) 0 0 repeat;
+	}
+}
+@media (max-width: 510px) {
+	div.quick-buttons {
+		width: auto;
+	}
+	#content .quick-buttons a {
+		float: initial;
+	}
+	#content .quick-buttons a#downloads-button:after {
+		width: 240px;
+		border-left: initial;
+	}
+	#content .quick-buttons a:after {
+		width: 240px;
+		border-right: 10px solid rgba(0, 0, 0, 0);
+	}
+	#content .quick-buttons a#downloads-button:after {
+		border-left: 10px solid rgba(0, 0, 0, 0);
 	}
 }

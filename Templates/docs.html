@@ -9,7 +9,7 @@
 				<ul class="nav">
 					<li class="active"><a href="#v8commands">Redis-v8 command list</a></li>
 					<li><a href="#jsapi">JS API</a></li>
-					<li><a href="#jsapispecial">JS API special functions</a></li>
+					<li><a href="#jsapispecial">JS API internals</a></li>
 					<li><a href="#redisconf">Redis.conf</a></li>
 					<li><a href="#protocol">Protocol</a></li>
 					<li><a href="#compiling">Compiling redis-v8</a></li>
@@ -22,7 +22,7 @@
 		<div class="page-header">
 			<h1>Docs <small>Manual & Documentation</small></h1>
 		</div>
-		<section id="content">
+		<section>
 			<div class="post">
 				<h2 id="v8commands">Redis-v8 command list</h2>
 				<dl>
@@ -113,7 +113,7 @@ $ ./redis-cli JS 'return redis.hmget("HSET:KEYNAME",["id","title","body"])';
 					</dd>
 				</dl>
 				
-				<h2 id="jsapispecial">JS API special functions</h2>
+				<h2 id="jsapispecial">JS API internals</h2>
 				<dl>
 					<dt>jscall_wrapper_function</dt>
 					<dd>
