@@ -5,7 +5,7 @@
 						<h1>Quick start</h1>
 					</div>
 					<p class="description">
-						This tutorial is targeted at those who are already familiar with redis, as well as a basic knowledge of JS and want to quickly get to the core redis-v8. If you are not familiar with redis, you should start with <a href="http://redis.io/topics/twitter-clone">this lesson</a>, more lessons can be found <a href="http://redis.io/documentation">here</a>.
+						This tutorial is targeted at those who are already familiar with redis, as well as a basic knowledge of JS and want to quickly get to the core of redis-v8. If you are not familiar with redis, you should start with <a href="http://redis.io/topics/twitter-clone">this lesson</a>, more lessons can be found <a href="http://redis.io/documentation">here</a>.
 					</p>
 					<p>
 						Redis wonderful, comfortable and incredibly fast database, but redis have a few problems. 
@@ -61,7 +61,7 @@ Predis\Autoloader::register();
 $redis = new Predis\Client();
 //JS command will execute javascript inside a database
 //In JS is an object redis, on which are all functions of the database, set, get, incr etc ...
-//We make a key "hello", with a value of "world" and return it to the PHP
+//Let`s make a key "hello", with a value "world" and return it to the PHP
 var_dump( 
 	$redis->js(
 		'redis.set("hello","world"); return redis.get("hello");'
