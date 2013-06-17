@@ -176,6 +176,31 @@ $ ./redis-cli JSCALL Crypto.sha1 123
 $ ./redis-cli JS 'return _.sortBy([1, 2, 3, 4, 5, 6], function(num){ return Math.sin(num); });';
 </pre>
 					</dd>
+					
+					<dt>Model(&lt;type&gt; [,object])</dt>
+					<dd>
+						Creating new entry
+						<pre class="prettyprint linenums languague-js">
+$ ./redis-cli JS 'return Model("page", {title: "page title", body: "page body", author: 1})';
+</pre>
+						Update existing entry (Specify id)
+						<pre class="prettyprint linenums languague-js">
+$ ./redis-cli JS 'return Model("page", { id: 1,title: "page title"})';
+</pre>
+						Queries:
+						<pre class="prettyprint linenums languague-js">
+# all entries
+$ ./redis-cli JS 'return Model("page").getAll()';
+# 100 newests
+$ ./redis-cli JS 'return Model("page").head(100).getAll()';
+# 100 oldest
+$ ./redis-cli JS 'return Model("page").tail(100).getAll()';
+# where page title contains "page" text
+$ ./redis-cli JS 'return Model("page").where("title",function(title){ return title.indexOf("page") != -1; }).getAll()';
+# order by
+$ ./redis-cli JS 'return Model("page").head(100).getAll().orderBy("raiting", "DESC")';
+</pre>
+					</dd>
 				</dl>
 				
 				<h2 id="jsapispecial">JS API internals</h2>

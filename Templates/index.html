@@ -2,13 +2,30 @@
 {% block contentclass %} center{% endblock %}
 
 {% block content %}
-<img src="img/redis-v8-large-logo.png" alt="Redis-v8 logo" class="main_logo">
-<div class="page-header">
-	<h1 class="main-title">Redis - V8</h1>
+<div class="row center components">
+	<div class="span3">
+		<img src="img/redis-v8-large-logo.png" alt="Redis-v8 logo" class="main_logo">
+	</div>
+	<div class="span9">
+		<p class="description">
+			Redis-v8 - Not Only SQL (NoSQL) database with built in Google V8 JS engine. The purpose of the project - the ease of use, high speed, bandwidth savings, ease of migrating.
+		</p>
+		<pre class="prettyprint left linenums languague-js">
+Model('post')
+		.head(100)
+		.where('time',function(time){
+			return time > (+new Date - 86400*7);
+		})
+		.getAll()
+		.orderBy('rating', 'DESC')
+		.limit(10)
+		.each(function(post){
+			post.author = Model('author').get(post.author);
+			post.comments = Model('post:'+post.id+':comment').getAll();
+		})
+</pre>
+	</div>
 </div>
-<p class="description">
-	Redis-v8 - Not Only SQL (NoSQL) database with built in Google V8 JS engine. The purpose of the project - the ease of use, high speed, bandwidth savings, ease of migrating.
-</p>
 <div class="quick-buttons">
 	<a id="docs-button" href="/docs/">Docs</a>
 	<a id="downloads-button" href="/downloads/">Downloads</a>
