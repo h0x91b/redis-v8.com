@@ -37,6 +37,15 @@ return will be:
 "{\"ret\":6,\"cmds\":0}"
 </pre>
 					</dd>
+					
+					<dt>JSA</dt>
+					<dd>
+						JSA - command used for execution a js code in database asynchronly. Return of this function will be always {"ret":true, "cmds":0}. You will need properly escape strings for right js syntax, otherwise  will be return error.
+						<pre class="prettyprint linenums languague-js">
+$ ./redis-cli JSA 'makeMillionKeys()';
+</pre>
+					</dd>
+					
 					<dt>JSCALL <js_function_name></dt>
 					<dd>
 						JSCALL - command used for safe and fast execution a js functions in database. Return of this function will be JSON encoded. All arguments will be passed to a js_function_name as a string arguments.
@@ -75,6 +84,7 @@ $ ./redis-cli JSCALL redis.get 'hello'
 $ ./redis-cli JS 'redis.hmset("HSET:KEYNAME",{"id":123,"title":"some title","body":"some body"})';
 </pre>
 					</dd>
+					
 					<dt>redis.hgetall(key)</dt>
 					<dd>
 						redis.hgetall - will return a JS Object, or null
@@ -82,6 +92,7 @@ $ ./redis-cli JS 'redis.hmset("HSET:KEYNAME",{"id":123,"title":"some title","bod
 $ ./redis-cli JS 'return redis.hgetall("HSET:KEYNAME")';
 </pre>
 					</dd>
+					
 					<dt>redis.hmget(key,field1[,field2[,field3...]]) or redis.hmget(key,['field1','field2','field3'])</dt>
 					<dd>
 						redis.hmget - will return a JS Object, or null
@@ -90,9 +101,38 @@ $ ./redis-cli JS 'return redis.hmget("HSET:KEYNAME","id","title","body")';
 $ ./redis-cli JS 'return redis.hmget("HSET:KEYNAME",["id","title","body"])';
 </pre>
 					</dd>
+					
 					<dt>window</dt>
 					<dd>
 						window - reference for a global object, like in browsers.
+					</dd>
+					
+					<dt>setTimeout(function, delay_ms)</dt>
+					<dd>
+						<pre class="prettyprint linenums languague-js">
+$ ./redis-cli JS 'return setTimeout(function(){ console.log("timeout") }, 1000)';
+</pre>
+					</dd>
+					
+					<dt>clearTimeout(id)</dt>
+					<dd>
+						<pre class="prettyprint linenums languague-js">
+$ ./redis-cli JS 'var id = setTimeout(function(){ console.log("timeout") }, 1000); clearTimeout(id);';
+</pre>
+					</dd>
+					
+					<dt>setInterval(function, delay_ms)</dt>
+					<dd>
+						<pre class="prettyprint linenums languague-js">
+$ ./redis-cli JS 'setInterval(function(){ console.log("interval") }, 1000)';
+</pre>
+					</dd>
+					
+					<dt>clearInterval(id)</dt>
+					<dd>
+						<pre class="prettyprint linenums languague-js">
+$ ./redis-cli JS 'var id = setInterval(function(){ console.log("interval") }, 1000); clearInterval(id);';
+</pre>
 					</dd>
 					
 					<dt>console.log([arguments])</dt>
@@ -110,6 +150,31 @@ $ ./redis-cli JS 'return redis.hmget("HSET:KEYNAME",["id","title","body"])';
 					<dt>console.warn([arguments])</dt>
 					<dd>
 						console.warn - will print pretified JSON of arguments to redis.log, with loglevel REDIS_WARNING.
+					</dd>
+					<dt>Crypto.md5</dt>
+					<dd>
+						MD5 hash function
+						<pre class="prettyprint linenums languague-js">
+$ ./redis-cli JS 'return Crypto.md5("123")';
+#the same, but using JSCALL
+$ ./redis-cli JSCALL Crypto.md5 123
+</pre>
+					</dd>
+					<dt>Crypto.sha1</dt>
+					<dd>
+						SHA1 hash function
+						<pre class="prettyprint linenums languague-js">
+$ ./redis-cli JS 'return Crypto.sha1("123")';
+#the same, but using JSCALL
+$ ./redis-cli JSCALL Crypto.sha1 123
+</pre>
+					</dd>
+					<dt>UnderscoreJS</dt>
+					<dd>
+						Yep, we have a underscore "_"
+						<pre class="prettyprint linenums languague-js">
+$ ./redis-cli JS 'return _.sortBy([1, 2, 3, 4, 5, 6], function(num){ return Math.sin(num); });';
+</pre>
 					</dd>
 				</dl>
 				
