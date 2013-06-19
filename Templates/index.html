@@ -12,17 +12,17 @@
 		</p>
 		<pre class="prettyprint left linenums languague-js">
 Model('post')
-		.head(100)
-		.where('time',function(time){
-			return time > (+new Date - 86400*7);
-		})
-		.getAll()
-		.orderBy('rating', 'DESC')
-		.limit(10)
-		.each(function(post){
-			post.author = Model('author').get(post.author);
-			post.comments = Model('post:'+post.id+':comment').getAll();
-		})
+	.head(100)
+	.where('time',function(time){
+		return time > (+new Date - 86400*7);
+	})
+	.getAll()
+	.orderBy('rating', 'DESC')
+	.limit(10)
+	.each(function(post){
+		post.author = Model('author').get(post.author);
+		post.comments = Model('post:'+post.id+':comment').getAll();
+	})
 </pre>
 	</div>
 </div>

@@ -27,3 +27,7 @@ ol.linenums li {
   color: #bebec5;
   line-height: 20px;
 }
+
+ol.linenums li span {
+	font-family: monospace , 'Courier New', Arial, Helvetica;
+}
