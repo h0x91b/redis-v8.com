@@ -2,11 +2,12 @@
 <html lang="en" itemscope itemtype="http://schema.org/Person">
 	<head>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="viewport" content="width=device-width, initial-scale=0.5">
 		<!-- Add the following three tags inside head. -->
 		<meta itemprop="name" content="http://redis-v8.com">
 		<meta itemprop="description" content="Redis-v8 - Not Only SQL (NoSQL) database with built in Google V8 JS engine. The purpose of the project - the ease of use, high speed, bandwidth savings, ease of migrating.">
 		<meta itemprop="image" content="http://redis-v8.com/img/redis-v8-large-logo.png">
+		<link rel="icon" type="image/png" href="http://www.redis-v8.com/favicon.png">
 		<title>Redis-V8 NoSQL DB with built in Google V8</title>
 		<link href="/image/redis-v8_16.png" rel="shortcut icon">
 		<link href="/css/bootstrap.min.css" rel="stylesheet">
@@ -30,17 +31,14 @@
 			<div id="top_menu" class="navbar navbar-inverse navbar-static-top">
 				<div class="navbar-inner">
 					<div class="container">
-						<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-							<span class="icon-bar"></span>
-						</button>
-						<a class="brand logo" href="/">
+						<a class="brand logo hidden-phone" href="/">
 							<img src="/img/redis-v8_min.png" alt="Redis V8">
 						</a>
-						<div class="nav-collapse collapse">
+						<div class="">
 							<ul class="nav">
 								<li{% if page == 'index' %} class="active"{% endif %}><a href="/">Intro</a></li>
+								<li class="divider-vertical"></li>
+								<li{% if page == 'benchmarks' %} class="active"{% endif %}><a href="/benchmarks/">Benchmarks</a></li>
 								<li class="divider-vertical"></li>
 								<li{% if page == 'quick-start' %} class="active"{% endif %}><a href="/quick-start/">Quickstart</a></li>
 								<li class="divider-vertical"></li>
@@ -65,12 +63,9 @@
 		<section id="footer">
 			<div class="container">
 				<div class="row">
-					<div class="span2">
-						<p>Redis-V8 © 2013</p>
-					</div>
-					<div class="span5">
+					<div class="span7">
 						<p>
-							This website is open source software developed by <a href="/author/">h0x91b</a>. <a href="https://raw.github.com/h0x91b/redis-v8/master/LICENSE" class="with_border" title="MIT License">License</a>
+							Redis-V8 © 2013. This website is open source software developed by <a href="/author/">h0x91b</a><a href="https://raw.github.com/h0x91b/redis-v8/master/LICENSE" class="with_border" title="MIT License">License</a>
 							
 						</p>
 					</div>
@@ -94,7 +89,7 @@
 				</div>
 			</div>
 		</section>
-		<div id="fork_wrap">
+		<div id="fork_wrap" class="hidden-phone">
 			<a href="https://github.com/h0x91b/redis-v8" target="_blank" class="bg_color_anime"><span>Fork me on GitHub</span></a>
 		</div>
 		<script src="http://code.jquery.com/jquery.js"></script>
@@ -104,9 +99,11 @@
 			!function($) {
 				$(function(){
 					window.prettyPrint && prettyPrint();
+					{% block jsready %}{% endblock %}
 				});
 			}(window.jQuery);
 		</script>
 		<script type="text/javascript" src="https://apis.google.com/js/plusone.js"></script>
+		<script src="http://code.highcharts.com/highcharts.js"></script>
 	</body>
 </html>
