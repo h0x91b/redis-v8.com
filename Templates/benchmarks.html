@@ -3,42 +3,164 @@
 
 {% block content %}
 <div class="page-header">
-	<h1>Benchmarks <small>will be more soon</small></h1>
+	<h1>Benchmarks</h1>
 </div>
 
 <section id="content">
 	<div class="post">
+		<h2>Test machine info</h2>
+		<p>
+			Machine: Virtual micro instance 1 cpu 1 GB RAM hosted by <a href="http://www.yooclouds.com" target="_blank">yooclouds.com</a><br>
+			OS: CentOS release 6.3 (Final)<br>
+			Memory: 1GB DDR3 1066Mhz<br>
+			CPU: 1 dedicated core 2.4 Ghz
+		</p>
+		
+		<h2>Redis-V8 with PHP + predis library</h2>
+		<div id="bench_php" style="width:100%; height:700px;"></div>
+		<p>
+			Test source located at <a href="https://github.com/h0x91b/redis-v8/tree/master/benchmarks" target="_blank">https://github.com/h0x91b/redis-v8/tree/master/benchmarks</a>
+		</p>
+		
+		<h2>Redis-V8 with NodeJS + node_redis library</h2>
+		<div id="bench_nodejs" style="width:100%; height:500px;"></div>
+		<p>
+			Test source located at <a href="https://github.com/h0x91b/redis-v8/tree/master/benchmarks" target="_blank">https://github.com/h0x91b/redis-v8/tree/master/benchmarks</a>
+		</p>
+		
+		<h2>Redis-V8 built-in redis-benchmark tool (writed on C)</h2>
+		<div id="bench_c_tool" style="width:100%; height:400px;"></div>
+		<p>
+			You can repeat this test by doing the following commands
+		</p>
 		<pre class="prettyprint linenums">
-$ ./redis-benchmark -q -s /tmp/redis.sock 
-
-PING_INLINE: 71428.57 requests per second
-PING_BULK: 66225.17 requests per second
-V8 PING: 22883.29 requests per second
-SET: 81967.21 requests per second
-V8 SET JSCALL 1 inline (Worst case): 22271.71 requests per second
-V8 SET JSCALL 100 inline (result * 100): 625782.25 requests per second
-V8 SET JSCALL 300 inline (result * 300): 827814.56 requests per second
-GET: 75187.97 requests per second
-V8 GET JSCALL 1 inline (Worst case): 22321.43 requests per second
-V8 GET JSCALL 100 inline (result * 100): 833333.31 requests per second
-V8 GET JSCALL 300 inline (result * 300): 1206757.88 requests per second
-INCR: 80645.16 requests per second
-V8 INCR JSCALL 1 inline (Worst case): 21459.23 requests per second
-V8 INCR JSCALL 100 inline (result * 100): 713775.88 requests per second
-V8 INCR JSCALL 300 inline (result * 300): 875401.25 requests per second
-LPUSH: 73529.41 requests per second
-LPOP: 66666.66 requests per second
-SADD: 66225.17 requests per second
-SPOP: 60240.96 requests per second
-LPUSH (needed to benchmark LRANGE): 69930.07 requests per second
-LRANGE_100 (first 100 elements): 20080.32 requests per second
-LRANGE_300 (first 300 elements): 9569.38 requests per second
-LRANGE_500 (first 450 elements): 7267.44 requests per second
-LRANGE_600 (first 600 elements): 6082.73 requests per second
-MSET (10 keys): 35211.27 requests per second
-</pre>
+$ cd redis-v8/redis/src
+$ ./redis-server ../redis.conf
+$ ./redis-benchmark -q -s /tmp/redis.sock</pre>
 	</div>
 </section>
 
 
+{% endblock %}
+
+{% block jsready %}
+	$('#bench_c_tool').highcharts({
+		chart: {
+			type: 'bar'
+		},
+		title: {
+			text: 'Redis-V8 benchmarks (C tool)'
+		},
+		xAxis: {
+			categories: ['Redis C benchmark tool', 'Redis-V8 (C benchmark tool) 1 call', 'Redis-V8 (C benchmark tool) 10 calls', 'Redis-V8 (C benchmark tool) 100 calls', 'Redis-V8 (C benchmark tool) 300 calls', 'Redis-V8 (C benchmark tool) 500 calls']
+		},
+		yAxis: {
+			title: {
+				text: 'Commands per second'
+			},
+		},
+		series: [
+			{
+				name: 'SET',
+				data: [79365, 17730, 131061, 566572, 751126, 851208.69]
+			},
+			{
+				name: 'GET',
+				data: [68027, 17761, 155279, 813669, 1118151, 1362769]
+			},
+			{
+				name: 'INCR',
+				data: [75757, 17857, 156739, 693000, 991407, 1069518]
+			},
+		]
+	});
+	
+	$('#bench_php').highcharts({
+		chart: {
+			type: 'bar'
+		},
+		title: {
+			text: 'PHP + Predis'
+		},
+		xAxis: {
+			categories: [
+				'Native (1 call)', 
+				'Native using pipelining (10 calls)',
+				'Native using pipelining (100 calls)',
+				'Native using pipelining (300 calls)',
+				'Native using pipelining (500 calls)',
+				'Native using LUA (1 call)',
+				'Native using LUA (10 calls)',
+				'Native using LUA (100 calls)',
+				'Native using LUA (300 calls)',
+				'Native using LUA (500 calls)',
+				'Redis-V8 (1 call)',
+				'Redis-V8 (10 calls)',
+				'Redis-V8 (100 calls)',
+				'Redis-V8 (300 calls)',
+				'Redis-V8 (500 calls)',
+			]
+		},
+		yAxis: {
+			title: {
+				text: 'Commands per second'
+			},
+		},
+		series: [
+			{
+				name: 'SET',
+				data: [14170, 19947, 23671, 23676, 22908, 3586, 24281, 85664, 117136, 165504, 9317, 77308, 343085, 582607, 647778]
+			},
+			{
+				name: 'GET',
+				data: [12695, 19443, 22805, 22248, 19524, 4027, 32435, 146057, 247526, 334689, 9817, 82737, 461589, 754097, 817779]
+			},
+			{
+				name: 'INCR',
+				data: [14263, 18564, 23247, 22449, 24231, 3010, 29363, 195038, 344100, 407227, 8685, 84235, 469303, 725961, 809095]
+			}
+		]
+	});
+	
+	$('#bench_nodejs').highcharts({
+		chart: {
+			type: 'bar'
+		},
+		title: {
+			text: 'NodeJS + node_redis'
+		},
+		xAxis: {
+			categories: [
+				'Native (1 call)', 
+				'Native using pipelining (10 calls)',
+				'Native using pipelining (100 calls)',
+				'Native using pipelining (300 calls)',
+				'Native using pipelining (500 calls)',
+				'Redis-V8 (1 call)',
+				'Redis-V8 (10 calls)',
+				'Redis-V8 (100 calls)',
+				'Redis-V8 (300 calls)',
+				'Redis-V8 (500 calls)',
+			]
+		},
+		yAxis: {
+			title: {
+				text: 'Commands per second'
+			},
+		},
+		series: [
+			{
+				name: 'SET',
+				data: [15530, 11832, 14372, 14086, 14292, 30779, 260824, 735835, 862813, 889680]
+			},
+			{
+				name: 'GET',
+				data: [14861, 10425, 14094, 14360, 14443, 30003, 282965, 907441, 1107420, 1127396]
+			},
+			{
+				name: 'INCR',
+				data: [14780, 11738, 14323, 14292, 14288, 24450, 283930, 1039501, 1273885, 1329787]
+			}
+		]
+	});
 {% endblock %}
