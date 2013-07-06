@@ -55,19 +55,22 @@ h1.main-title {
 	margin: 20px 0;
 }
 
-p.description {
+#main #content p.description, p.description {
 	font-size: 16px;
 	line-height: 25px;
 	text-align: left;
 	color: #3b3b3b;
 }
 
-.info {
-	background: rgba(53,53,51,.2);
+#main #content p.info, p.info {
+	font-size: 16px;
+	background: rgba(53,53,46,.2);
+	font-size: 14px;
+	line-height: 20px;
 	border-radius: 3px;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
-	padding: 10px 20px;
+	padding: 10px 0;
 	margin: 15px 0;
 	text-align: center;
 	text-shadow: 1px 1px 0 #ddd;
@@ -458,6 +461,7 @@ ul.note li{
 /*------fork-----*/
 #fork_wrap {
 	height: 200px;
+	pointer-events:none;
 	position: absolute;
 	top: 0;
 	right: 0;
@@ -466,6 +470,7 @@ ul.note li{
 }
 #fork_wrap a {
 	display: block;
+	pointer-events:initial;
 	text-align: center;
 	padding: 5px 0;
 	background: #d82a20;
