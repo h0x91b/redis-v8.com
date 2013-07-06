@@ -275,7 +275,7 @@ div.quick-buttons {
 	cursor: default;
 }
 #top_menu li.active a:before, #top_menu li:hover a:before {
-	background-color: #fa3507;
+	background-color: #e24722;
 }
 #top_menu li.dropdown > a:after {
 	display: inline-block;
@@ -368,7 +368,7 @@ div.quick-buttons {
 	color: #9a140b;
 }
 #content a:hover, #content a:visited, #content a:active {
-	color: #fa3507;
+	color: #e24722;
 }
 pre.prettyprint {
 	margin: 10px 0;
@@ -442,7 +442,7 @@ ul.note li{
 .side_menu nav > ul > li > a:hover {
 	background: rgba(255,255,255,.6);
 	padding-left: 10px;
-	border-left: 3px solid #fa3507;
+	border-left: 3px solid #e24722;
 }
 .side_menu ul li.active {
 	z-index: 1;
@@ -451,7 +451,7 @@ ul.note li{
 	background: #2c2c2c;
 	color: #fff;
 	padding-left: 10px;
-	border-left: 3px solid #fa3507;
+	border-left: 3px solid #e24722;
 	text-shadow: none;
 	cursor: default;
 }
@@ -483,7 +483,7 @@ ul.note li{
 }
 #fork_wrap a:hover {
 	text-decoration: none;
-	background-color: #fa3507;
+	background-color: #e24722;
 }
 #fork_wrap a span {
 	display: block;

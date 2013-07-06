@@ -11,6 +11,7 @@
   padding: 8px;
   background: url(../img/darck_bg.png) 0 0 repeat #424242;
   border: 1px solid #e1e1e8;
+  font-family: monospace , 'Courier New', Arial, Helvetica;
 }
 .prettyprint.linenums {
   -webkit-box-shadow: inset 40px 0 0 rgba(0,0,0,.7), inset 41px 0 0 #696969;
