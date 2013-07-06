@@ -7,12 +7,12 @@
 			<h3>Docs</h3>
 			<nav id="content_menu">
 				<ul class="nav">
-					<li class="active"><a href="#v8commands">Redis-v8 command list</a></li>
+					<li class="active"><a href="#v8commands">Redis-V8's new commands</a></li>
 					<li><a href="#jsapi">JS API</a></li>
 					<li><a href="#jsapispecial">JS API internals</a></li>
 					<li><a href="#redisconf">Redis.conf</a></li>
 					<li><a href="#protocol">Protocol</a></li>
-					<li><a href="#compiling">Compiling redis-v8</a></li>
+					<li><a href="#compiling">Compiling Redis-V8</a></li>
 					<li><a href="#tutorials">Tutorials</a></li>
 					<li><a href="#comments">Comments</a></li>
 				</ul>
@@ -25,11 +25,11 @@
 		</div>
 		<section>
 			<div class="post">
-				<h2 id="v8commands">Redis-v8 command list</h2>
+				<h2 id="v8commands">Redis-V8's new commands</h2>
 				<dl>
-					<dt>JS</dt>
+					<dt>JS &lt;some_JS_code></dt>
 					<dd>
-						JS - command used for execution a js code in database. Return of this function will be JSON encoded. You will need properly escape strings for right js syntax, otherwise  will be return error.
+						JS - used for execution of JS code within a database. This function's return will be a JSON-encoded string. You will need to use proper escape strings for the JS syntax to be valid, otherwise the command will return an error.
 						<pre class="prettyprint linenums languague-js">
 $ ./redis-cli JS 'return 2+2*2';
 </pre>
@@ -39,26 +39,34 @@ return will be:
 </pre>
 					</dd>
 					
-					<dt>JSA</dt>
+					<dt>JSA &lt;some_JS_code></dt>
 					<dd>
-						JSA - command used for execution a js code in database asynchronly. Return of this function will be always {"ret":true, "cmds":0}. You will need properly escape strings for right js syntax, otherwise  will be return error.
+						JSA - used for asynchronous execution of JS code within a database, will not wait for a response, as opposed to the JS function. This function's return will always be {"ret":true, "cmds":0}. You will need to use proper escape strings for the JS syntax to be valid, otherwise the command will return an error.
 						<pre class="prettyprint linenums languague-js">
 $ ./redis-cli JSA 'makeMillionKeys()';
 </pre>
 					</dd>
 					
-					<dt>JSCALL <js_function_name></dt>
+					<dt>JSCALL &lt;js_function_name></dt>
 					<dd>
-						JSCALL - command used for safe and fast execution a js functions in database. Return of this function will be JSON encoded. All arguments will be passed to a js_function_name as a string arguments.
+						JSCALL - used for safe and fast execution JS functions within a database. Does not require escape strings like the JS and JSA commands, also does not require compiled JS code, and is therefore faster. This function will return a JSON-encoded string. All arguments will be passed to a js_function_name as string arguments.
 						<pre class="prettyprint linenums languague-js">
+//the following performs exactly the same function as
+//$ ./redis-cli JS "return redis.set('hello', 'world');"
 $ ./redis-cli JSCALL "redis.set" "hello" "world"
+
+//the following performs exactly the same function as
+//$ ./redis-cli JS "return redis.get('hello');"
 $ ./redis-cli JSCALL "redis.get" "hello"
+
+//the following performs exactly the same function as
+//$ ./redis-cli JS "return console.log('hello', 'world');"
 $ ./redis-cli JSCALL "console.log" "hello" "world"
 </pre>
 					</dd>
 					<dt>JSRELOAD</dt>
 					<dd>
-						JSRELOAD - command used for reinitialize V8 with all user scripts.
+						JSRELOAD - used to re-initialize V8 with all user scripts. Use after modifying and/or adding new JS scripts to your database (Redis-V8 will NOT automatically monitor changes to the user scripts and requires a manual restart).
 						<pre class="prettyprint linenums languague-js">
 $ ./redis-cli JSRELOAD
 </pre>
@@ -71,7 +79,7 @@ $ ./redis-cli JSRELOAD
 					<dt>redis.*</dt>
 					<dd>
 						<p>
-							redis Object have all standart redis commands, like redis.get, redis.set, redis.hmset etc...<br>A full list of redis commands you cand find on <a href="http://redis.io/commands" target="_blank">redis.io/commands</a>.
+							The "redis" object includes the standard redis commands, such as redis.get, redis.set, redis.hmset etc...<br>A full list of redis commands is available at <a href="http://redis.io/commands" target="_blank">redis.io/commands</a>. All the standard Redis commands are used in exactly the same way as in Redis, apart from the following three (redis.hmset, redis.hmget, redis.hgetall), which have been modified in Redis-V8 for improved convenience of use.
 						</p>
 						<pre class="prettyprint linenums languague-js">
 $ ./redis-cli JS "redis.set('hello', 'world'); return redis.get('hello');"
@@ -103,13 +111,20 @@ $ ./redis-cli JS 'return redis.hmget("HSET:KEYNAME",["id","title","body"])';
 </pre>
 					</dd>
 					
-					<dt>window</dt>
+					<dt>Window</dt>
 					<dd>
-						window - reference for a global object, like in browsers.
+						window - reference to a global object, similar to the behavior of "window" in browsers.
+						<pre class="prettyprint linenums languague-js">
+$ ./redis-cli JS 'some_global_var = 321;'
+
+$ ./redis-cli JS 'return window.some_global_var;'
+//321 will be returned
+</pre>
 					</dd>
 					
 					<dt>setTimeout(function, delay_ms)</dt>
 					<dd>
+						setTimeout - can be used for asynchronous code execution. A mildly resource-consuming command.
 						<pre class="prettyprint linenums languague-js">
 $ ./redis-cli JS 'return setTimeout(function(){ console.log("timeout") }, 1000)';
 </pre>
@@ -124,6 +139,7 @@ $ ./redis-cli JS 'var id = setTimeout(function(){ console.log("timeout") }, 1000
 					
 					<dt>setInterval(function, delay_ms)</dt>
 					<dd>
+						setInterval - can be used for asynchronous code execution like Cron jobs. Use with caution, has the potential to be VERY resource-heavy if used improperly.
 						<pre class="prettyprint linenums languague-js">
 $ ./redis-cli JS 'setInterval(function(){ console.log("interval") }, 1000)';
 </pre>
@@ -138,19 +154,19 @@ $ ./redis-cli JS 'var id = setInterval(function(){ console.log("interval") }, 10
 					
 					<dt>console.log([arguments])</dt>
 					<dd>
-						console.log - will print pretified JSON of arguments to redis.log, with loglevel REDIS_NOTICE.
+						console.log - will print a prettified JSON of arguments to redis.log, with loglevel REDIS_NOTICE.
 					</dd>
 					<dt>console.debug([arguments])</dt>
 					<dd>
-						console.debug - will print pretified JSON of arguments to redis.log, with loglevel REDIS_DEBUG.
+						console.debug - will print prettified JSON of arguments to redis.log, with loglevel REDIS_DEBUG.
 					</dd>
 					<dt>console.info([arguments])</dt>
 					<dd>
-						console.info - will print pretified JSON of arguments to redis.log, with loglevel REDIS_VERBOSE.
+						console.info - will print prettified JSON of arguments to redis.log, with loglevel REDIS_VERBOSE.
 					</dd>
 					<dt>console.warn([arguments])</dt>
 					<dd>
-						console.warn - will print pretified JSON of arguments to redis.log, with loglevel REDIS_WARNING.
+						console.warn - will print prettified JSON of arguments to redis.log, with loglevel REDIS_WARNING.
 					</dd>
 					<dt>Crypto.md5</dt>
 					<dd>
@@ -172,7 +188,7 @@ $ ./redis-cli JSCALL Crypto.sha1 123
 					</dd>
 					<dt>UnderscoreJS</dt>
 					<dd>
-						Yep, we have a underscore "_"
+						Redis-V8 fully supports the <a href="http://underscorejs.org/" target="_blank">UnderscoreJS</a> utility-belt library. It is fully available within the API via the "_" symbol, for example:
 						<pre class="prettyprint linenums languague-js">
 $ ./redis-cli JS 'return _.sortBy([1, 2, 3, 4, 5, 6], function(num){ return Math.sin(num); });';
 </pre>
@@ -205,14 +221,17 @@ $ ./redis-cli JS 'return Model("page").head(100).getAll().orderBy("raiting", "DE
 				</dl>
 				
 				<h2 id="jsapispecial">JS API internals</h2>
+				<p>
+					The following are internal Redis-V8 objects, functions, variables and commands - not to be used within your script(s)!
+				</p>
 				<dl>
 					<dt>jscall_wrapper_function</dt>
 					<dd>
-						jscall_wrapper_function - this is internal function used for JSCALL.
+						jscall_wrapper_function - this is an internal function used for JSCALL
 					</dd>
 					<dt>redis._run</dt>
 					<dd>
-						Internal redis-V8 function used in almost all js wrappers. 
+						Internal Redis-V8 function used in almost all of the JS wrappers. 
 						<pre class="prettyprint linenums languague-js">
 $ ./redis-cli JS 'return redis._run("SET","Hello","World")';
 $ ./redis-cli JS 'return redis._run("HMSET","HSET:KEYNAME","id",123,"title","some tile","body","some body")';
@@ -220,19 +239,19 @@ $ ./redis-cli JS 'return redis._run("HMSET","HSET:KEYNAME","id",123,"title","som
 					</dd>
 					<dt>redis.last_error</dt>
 					<dd>
-						redis.last_error - will be empty if redis.* command executed succesfully, or will contain error string.
+						redis.last_error - will remain empty if a redis.* command executed succesfully, or contain an error string otherwise.
 					</dd>
 					<dt>redis.v8_start</dt>
 					<dd>
-						JS timestamp of V8 init, command JSRELOAD will flush it.
+						JS timestamp of a V8 init, the JSRELOAD command flushes it.
 					</dd>
 					<dt>redis._runcounter</dt>
 					<dd>
-						Counter of redis api calls.
+						Global Redis DB requests counter.
 					</dd>
 					<dt>redis.inline_return</dt>
 					<dd>
-						Internal redis-v8 function, used for JS command wrap and JSON return.
+						Internal Redis-V8 function, used for JS command wrap and JSON returns.
 					</dd>
 				</dl>
 				
@@ -241,19 +260,19 @@ $ ./redis-cli JS 'return redis._run("HMSET","HSET:KEYNAME","id",123,"title","som
 				<dl>
 					<dt>js-dir</dt>
 					<dd>
-						js-dir - path for user scripts folder.
+						js-dir - path to the user scripts folder.
 						<pre class="prettyprint linenums languague-js">
 js-dir "/var/www/redis-v8/js/"
 </pre>
 					</dd>
 					<dt>js-flags</dt>
 					<dd>
-						js-flags - Google v8 flags. You can set flags with redis command CONFIG SET js-flags "" and run JSRELOAD.
+						js-flags - Google V8 flags. You can set flags with the Redis command CONFIG SET js-flags "" and run JSRELOAD.
 						<pre class="prettyprint linenums languague-js">
 js-flags "--trace_inlining --trace_opt --trace_deopt --trace_opt_verbose --trace_exception --trace-hydrogen"
 </pre>
 						<p>
-							Full list of js-flags you can get by folowing command:
+							You can get a full list of js-flags using the folowing command:
 						</p>
 						<pre class="prettyprint linenums languague-js">
 $ cd redis-v8/
@@ -263,14 +282,14 @@ $ ./redis/deps/v8/out/native/d8 --help
 					</dd>
 					<dt>js-timeout</dt>
 					<dd>
-						js-timeout - The time in seconds after which an error will be thrown.
+						js-timeout - The time in seconds before a script is killed and an error is added to the Redis logfile.
 						<pre class="prettyprint linenums languague-js">
 js-timeout 30
 </pre>
 					</dd>
 					<dt>js-slow</dt>
 					<dd>
-						js-slow - The time in miliseconds after which an notice will be logged in redis logfile.
+						js-slow - The time in miliseconds before a notice will be added to the Redis logfile.
 						<pre class="prettyprint linenums languague-js">
 js-slow 250
 </pre>
@@ -278,12 +297,12 @@ js-slow 250
 				</dl>
 				
 				
-				<h2 id="protocol">Redis-v8 protocol</h2>
+				<h2 id="protocol">Redis-V8 protocol</h2>
 				<p>
-					Redis-v8 support regular protocol of redis, you can see a specification at <a href="http://redis.io/topics/protocol" target="_blank">redis.io/topics/protocol</a>.
+					Redis-V8 supports the regular Redis protocol, specifications are available at <a href="http://redis.io/topics/protocol" target="_blank">redis.io/topics/protocol</a>.
 				</p>
 				<p>
-					JS, and JSCALL commands always return string with JSON, or redis error will be thrown.
+					JS and JSCALL commands either return a JSON-encoded string, or a Redis error.
 				</p>
 				<pre class="prettyprint linenums languague-js">
 {"ret":6,"cmds":0}
@@ -293,11 +312,11 @@ js-slow 250
 {"ret":{"object":{"data":[1,2,3,4,5]}},"cmds":0}
 </pre>
 				<p>
-				where "ret" will be function return and "cmds" - counter of DB command was executed on this function call.									
+				where "ret" will be the function's return and "cmds" is the number of DB requests executed by the script.									
 				</p>
 				
 				
-				<h2 id="compiling">Compiling redis-v8</h2>
+				<h2 id="compiling">Compiling Redis-V8</h2>
 				<p>
 					You will need the following packages:
 					<ol>
@@ -309,21 +328,21 @@ js-slow 250
 						<li>tclsh8.5 - for running unit tests</li>
 					</ol>
 				</p>
-				<p>Getting source and compiling:</p>
+				<p>Getting the source and compiling:</p>
 				<pre class="prettyprint linenums languague-js">
 $ git clone git://github.com/h0x91b/redis-v8.git
 $ cd redis-v8/redis
 $ make MALLOC=jemalloc
 </pre>
-				<p>Running redis-v8 server</p>
+				<p>Running a Redis-V8 server</p>
 				<pre class="prettyprint linenums languague-js">
-# from the root of redis-v8 folder
+# from the root of the redis-v8 folder
 $ cd redis/
 $ ./redis-server ../redis.conf
 </pre>
 				<p>Running benchmarks</p>
 				<pre class="prettyprint linenums languague-js">
-# from the root of redis-v8 folder
+# from the root of the redis-v8 folder
 $ cd redis/
 $ ./redis-benchmark -q -s /tmp/redis.sock
 </pre>
