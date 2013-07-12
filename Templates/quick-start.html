@@ -4,22 +4,23 @@
 					<div class="page-header">
 						<h1>Quick Start</h1>
 					</div>
-					<p class="description">
+		<div class="row components">
+					<p class="description span6">
 This tutorial assumes you know your way around Redis as well as JavaScript and is intended to quickly get you up to speed on what could be done with Redis-V8. If you are not familiar with Redis, we would suggest completing <a href="http://redis.io/topics/twitter-clone" target="_blank">this tutorial</a>, with more Redis tutorials available <a href="http://redis.io/documentation">here</a>.
-					<p class="info">
-Compiling the project source is not covered by this introductory material.
-				</p>
-<p>
 </p>
-				<p>
+				<div class="span6">
 					Redis is a wonderful, comfortable and incredibly agile database, but with a few limitations:
 					<ol>
 						<li>The multitude of tiny network packets. The use of pipelining alleviates this somewhat, but not in every scenario.</li>
 						<li>As the database grows, so does the difficulty of tracking keys within the database.</li>
 					</ol>
 						Redis-V8 helps alleviate both of these significantly, as well as providing a solid performance increase.
-					</p>
-					<div class="page-header">
+			</div>
+					<p class="info span6">
+Compiling the project source is not covered by this introductory material.
+				</p>
+
+					<div class="page-header clear">
 						<h3>This tutorial will demonstrate the basics of using Redis-V8 via PHP.</h3>
 					</div>
 					<dl>
