@@ -3,41 +3,52 @@
 
 {% block content %}
 <div class="page-header">
-	<h1>Redis-V8 Benchmarks</h1>
+	<h1>Redis-V8 Examplary Benchmarks</h1>
 </div>
 
 <section id="content">
 	<div class="post">
-		<h2>Test machine info</h2>
-		
+	<div class="row components">
+		<div class="span6">
+		<h2>Purpose and Methodology</h2>
 		<p>
-			Machine: Virtual micro-instance running on 1 core using 1GB of RAM (hosted by <a href="http://www.yooclouds.com" target="_blank">www.yooclouds.com</a>)<br>
-			OS: CentOS release 6.3 (Final)<br>
-			Memory: 1GB DDR3 @ 1066Mhz<br>
-			CPU: 1 dedicated core @ 2.4 Ghz
+			These measurements are meant to give a ballpark figure that starts a discussion, and are in no way definitive of actual performance for Redis or Redis-V8. Your own mileage may vary.
+			<br>Details such as specific versions of libraries used can be gleaned from the source files linked below each benchmark graph.
 		</p>
+		</div>
+		<div class="span6">
+		<h2>Testbed configuration</h2>
 		
-		<br>
+		<p class="info">Using a `micro-instance` sporting one virtual core with 1GB of RAM
+		<br>(graciously hosted by <a href="http://www.yooclouds.com" target="_blank">www.yooclouds.com</a>)</p>
+		<table cellpadding=0 cellspacing=0>
+		<tr>	<td>Software:&nbsp;</td> <td>CentOS release 6.3 (Final)</td>
+		<tr>	<td>Memory:</td> <td>1GB DDR3 @ 1066Mhz</td>
+		<tr>	<td>CPU:</td> <td>1 dedicated core @ 2.4 Ghz</td>
+		</table>
+		</div>
+		</div><br>
+		
 		<h2>NodeJS + node_redis library</h2>
-		<p>Comparison of Redis-V8 performance using NodeJS with the node_redis library vs. native Redis:</p>
+		<p>Testing basic operations where each "1 call" is looping on the order of hundreds of thousands of iterations, using NodeJS with the node_redis library. This is done as a ghetto way of building a performance scaling graph out of individual tests.</p>
 		<div id="bench_nodejs" style="width:100%; height:500px;"></div>
 		<p>
-			Test source located at <a href="https://github.com/h0x91b/redis-v8/tree/master/benchmarks" target="_blank">https://github.com/h0x91b/redis-v8/tree/master/benchmarks</a> (all *.js files)
+			Test source files: <a href="https://github.com/h0x91b/redis-v8/tree/master/benchmarks" target="_blank">github.com/h0x91b/redis-v8/tree/master/benchmarks</a> (all files ending in *.js)
 		</p>
 		
 		<br>
 		<h2>PHP + predis library</h2>
-		<p>Comparison of Redis-V8 performance using PHP with the predis library vs. native Redis:</p>
+		<p>Basic ops are run in a tight loop on the order of hundreds of thousands for each call, with the goal to establish a rough estimate of performance scaling. Tests are run by PHP5 using predis library to communicate with the memory store.</p>
 		<div id="bench_php" style="width:100%; height:550px;"></div>
 		<p>
-			Test source located at <a href="https://github.com/h0x91b/redis-v8/tree/master/benchmarks" target="_blank">https://github.com/h0x91b/redis-v8/tree/master/benchmarks</a> (all *.php files)
+			Test source located at <a href="https://github.com/h0x91b/redis-v8/tree/master/benchmarks" target="_blank">github.com/h0x91b/redis-v8/tree/master/benchmarks</a> (all the files with a *.php extension)
 		</p>
 		
 		<br>
-		<h2>built-in redis-benchmark tool</h2>
+		<h2>redis-benchmark tool <small>(part of official Redis distribution)</small></h2>
 		<div id="bench_c_tool" style="width:100%; height:400px;"></div>
 		<p>
-			You can repeat this test using the following commands:
+			You can try this test for yourself by typing:
 		</p>
 		<pre class="prettyprint linenums">
 $ cd redis-v8/redis/src
