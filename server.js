@@ -18,6 +18,7 @@ swig.init({
 
 app.use(express.static(__dirname + '/static/',{ maxAge: 600000 }));
 app.use(express.compress());
+app.use(express.bodyParser());
 
 global.swig = swig;
 require('./App/index.js');
@@ -27,6 +28,7 @@ require('./App/downloads.js');
 require('./App/author.js');
 require('./App/benchmarks.js');
 require('./App/roadmap.js');
+require('./App/try.js');
 
 
 app.listen(3000);

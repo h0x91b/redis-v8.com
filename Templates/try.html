@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+{% block contentclass %}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+	<h1>Try redis-v8 online</h1>
+</div>
+<p>
+	Type your JavaScript here:
+</p>
+<p>
+	<textarea class="span10" rows="10" name="code">
+redis.set('hello', 'world');
+var incr = redis.incr('incr');
+redis.hmset('hash', { Hello: 'world', type: 'some type', title: 'some title', incr: incr });
+
+return {
+	hello: redis.get('hello'),
+	increment: redis.incr('incrkey'),
+	hash: redis.hgetall('hash'),
+};
+</textarea>
+<input type="button" value="Run" name="run">
+</p>
+<p>Result:</p>
+<p>
+	<textarea name="result" readonly class="span10" rows="10"></textarea>
+</p>
+<script>
+$('input[name="run"]').click(function(){
+	var code = $('textarea[name="code"]').val();
+	console.log('run', code);
+	$.post('/try', {code: code}, function(json){
+		console.log('result', json);
+		$('textarea[name="result"]').val(JSON.stringify(json, null, '\t'));
+	}, 'json');
+});
+</script>
+{% endblock %}
