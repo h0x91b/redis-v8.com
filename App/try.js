@@ -19,13 +19,14 @@ global.express.post('/try', function(req, res){
 		res.send('{"Error": "No code..."}');
 		return;
 	}
+	var start = +new Date;
 	client.js([req.body.code], function(err, result){
 		if(err){
 			console.log(err, typeof err);
 			res.send(JSON.stringify({ERROR: err.toString()}));
 			return;
 		}
-		res.send(result);
+		res.send(JSON.stringify({result: result, time: (+new Date)-start}));
 		return;
 	});
 });
